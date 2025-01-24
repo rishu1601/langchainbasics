@@ -1,5 +1,7 @@
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+from langchain_ollama import ChatOllama
 
 information = """
     Elon Reeve Musk (/ˈiːlɒn mʌsk/; born June 28, 1971) is a businessman and political figure known for his key roles in the automotive company Tesla, Inc. and the space company SpaceX. Since January 2025, he is serving as Administrator of the Department of Government Efficiency, under the second Donald Trump presidential administration. He is also known for his ownership of X Corp. (the company that operates the social media platform X, formerly Twitter), and his role in the founding of the Boring Company, xAI, Neuralink, and OpenAI. Musk is the wealthiest individual in the world; as of January 2025, Forbes estimates his net worth to be US$427 billion.
@@ -22,10 +24,36 @@ if __name__ == "__main__":
     summary_prompt_template = PromptTemplate(
         input_variables=["information"], template=summary_template
     )
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
+    # Making use of langchain makes switching llm easy
+    # llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+
+    llm = ChatOllama(model="llama3.2")
+    
+    print("defining the chain")
+    
     # similar to making an api call to llm(open ai)
-    chain = summary_prompt_template | llm
+    chain = summary_prompt_template | llm | StrOutputParser()
+    
+    print("invoking the chain")
 
     # invoke the chain defined above, also supply the values for the template
     res = chain.invoke(input={"information": information})
+    
+    print(res)
+    
+    print("          --------------------------------            ")
+    print("          --------------------------------            ")
+    
+
+    llm_mistral = ChatOllama(model="mistral")
+
+    # similar to making an api call to llm(open ai)
+    chain_mistral = summary_prompt_template | llm_mistral | StrOutputParser()
+
+    print("invoking the mistral chain")
+
+    # invoke the chain defined above, also supply the values for the template
+    res_mistral = chain_mistral.invoke(input={"information": information})
+
+    print(res_mistral)
