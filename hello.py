@@ -29,22 +29,21 @@ if __name__ == "__main__":
     # llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
     llm = ChatOllama(model="llama3.2")
-    
+
     print("defining the chain")
-    
+
     # similar to making an api call to llm(open ai)
     chain = summary_prompt_template | llm | StrOutputParser()
-    
+
     print("invoking the chain")
 
     # invoke the chain defined above, also supply the values for the template
     res = chain.invoke(input={"information": information})
-    
+
     print(res)
-    
+
     print("          --------------------------------            ")
     print("          --------------------------------            ")
-    
 
     llm_mistral = ChatOllama(model="mistral")
 
